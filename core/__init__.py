@@ -1,6 +1,6 @@
 from flask import Flask
 from os import path
-from constants import directory
+from core.constants import directory
 import logging
 import importlib
 import glob
@@ -35,6 +35,3 @@ def init_app():
         
     app.run()
     app.logger.info("App: start completed")
-
-if __name__ == "__main__":  
-    run()
