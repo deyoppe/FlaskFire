@@ -5,33 +5,31 @@ import logging
 import importlib
 import glob
 app = Flask(__name__)
-app.debug = True
+logger = app.logger
 
 def run():
-    app.logger.info("Run start")
-    init_app()
-    app.logger.info("Run end")
-    
-def init_logger():
-    app.logger.setLevel(logging.DEBUG)
-    
-def init_app():
-    app.logger.info("App: starting")
+    logger.debug("Core run start")
+    __init_app()
+    logger.debug("Core run completed")
+
+def __init_app():
+    logger.debug("App initialization start")
     
     controller_dir = path.join(directory["controllers"], "*.py")
-    app.logger.debug("Loading all controllers in directory: {:s}".format(controller_dir))
+    logger.debug("Loading all controllers in directory: {:s}".format(controller_dir))
     
     controller_files = glob.glob(controller_dir)
-    app.logger.debug("Found controllers: {:s}".format(str(controller_files)))
+    logger.debug("Found controllers: {:s}".format(str(controller_files)))
     
     controllers = [ path.basename(f)[:-3] for f in controller_files if path.isfile(f)]
     for controller in controllers:
         module_name = "app.controllers.{:s}".format(controller)
-        app.logger.info("Registering controller: {:s}".format(controller))
+        logger.info("Registering controller: {:s}".format(controller))
         
         module = getattr(importlib.import_module(module_name), "controller")
-        app.register_blueprint(module, url_prefix="/{:s}".format(controller))
-        app.logger.info("Registration of controller {:s} completed".format(controller))
+        url_prefix = "/{:s}".format(controller)
+        app.register_blueprint(module, url_prefix=url_prefix)
+        logger.info("Controller {:s} registered at {:s}".format(controller, url_prefix))
         
     app.run()
-    app.logger.info("App: start completed")
+    logger.debug("App initialized")
