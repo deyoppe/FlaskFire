@@ -1,17 +1,15 @@
-import core.constants as _constants
-constants = _constants
+# Order is important
+from core.system.constants import constants
+from core.system.app import app
+from core.system.logger import logger
+from core.system.db import db
 
-import core.app as _app
-app = _app.app
-
-import core.logger as _logger
-logger = _logger.logger
-
-import core.db as _db
-db = _db.db
 
 def run():
+    import core.system.db as _db
+    import core.system.app as _app
+    
     logger.fatal("Core run start")
-    _app.run()
     _db.run()
+    _app.run()
     logger.debug("Core run completed")
